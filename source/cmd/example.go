@@ -36,7 +36,7 @@ func (c *ExampleCmd) run(
 	clio *clio.Clio,
 	specs *app.Specs,
 ) error {
-	clio.Banner(specs.GetVersion(), specs.GetChannel(), specs.GetBuildDate())
+	clio.Banner()
 
 	clio.Info(fmt.Sprintf("The environment is '%s'.", env.Env))
 	clio.Success("The application works!")

@@ -31,7 +31,7 @@ func main() {
 	}
 
 	specs := app.NewSpecs(Version, Channel, BuildDate)
-	clio.SetBannerTemplate(string(data))
+	clio.SetBanner(string(data), Version, Channel, BuildDate)
 
 	kernel := app.NewKernel(EmbedFS, specs, clio)
 
