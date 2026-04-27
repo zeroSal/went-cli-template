@@ -4,6 +4,7 @@ import (
 	"clitemplate/app"
 	_ "clitemplate/cmd"
 	"clitemplate/registry"
+	"context"
 	"embed"
 	"fmt"
 	"os"
@@ -33,7 +34,9 @@ func main() {
 	specs := app.NewSpecs(Version, Channel, BuildDate)
 	clio.SetBanner(string(data), Version, Channel, BuildDate)
 
-	kernel := app.NewKernel(EmbedFS, specs, clio)
+	ctx := context.Background()
+
+	kernel := app.NewKernel(ctx, EmbedFS, specs, clio)
 
 	root := &cobra.Command{
 		Version: fmt.Sprintf("%s-%s (%s)", Version, Channel, BuildDate),

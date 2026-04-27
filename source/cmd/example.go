@@ -4,6 +4,7 @@ import (
 	"clitemplate/app"
 	"clitemplate/app/config"
 	"clitemplate/registry"
+	"context"
 	"fmt"
 
 	"github.com/zeroSal/went-clio/clio"
@@ -32,6 +33,7 @@ func (c *ExampleCmd) Invoke() any {
 }
 
 func (c *ExampleCmd) run(
+	ctx context.Context,
 	env *config.Env,
 	clio *clio.Clio,
 	specs *app.Specs,
