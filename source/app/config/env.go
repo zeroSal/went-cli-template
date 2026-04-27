@@ -43,7 +43,3 @@ func (e *Env) Validate() error {
 func (e *Env) GetLogsDir() string {
 	return fmt.Sprintf("%s/logs", e.VarDir)
 }
-
-func (e *Env) GetUploadsDir() string {
-	return fmt.Sprintf("%s/uploads", e.VarDir)
-}

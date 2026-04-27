@@ -18,7 +18,6 @@ var Init = fx.Options(
 func InitWorkingDirs(env *config.Env) error {
 	dirs := []string{
 		env.GetLogsDir(),
-		env.GetUploadsDir(),
 	}
 
 	for _, dir := range dirs {
