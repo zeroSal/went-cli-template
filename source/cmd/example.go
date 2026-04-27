@@ -5,7 +5,6 @@ import (
 	"clitemplate/app/config"
 	"clitemplate/registry"
 	"context"
-	"fmt"
 
 	"github.com/zeroSal/went-clio/clio"
 	"github.com/zeroSal/went-command/command"
@@ -40,7 +39,7 @@ func (c *ExampleCmd) run(
 ) error {
 	clio.Banner()
 
-	clio.Info(fmt.Sprintf("The environment is '%s'.", env.Env))
+	clio.Info("The environment is '%s'.", env.Env)
 	clio.Success("The application works!")
 
 	return nil
