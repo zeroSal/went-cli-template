@@ -1,24 +1,16 @@
 ## Project Structure
 
 - `main.go` — Entry point, creates root `cobra.Command`, uses embed.FS for templates/static
-- `cmd/` — Command implementations using custom `went-command` pattern (`serve.go`)
+- `app/cmd/` — Command implementations using custom `went-command` pattern
 - `app/kernel.go` — DI kernel that creates and runs the fx.App
 - `app/container.go` — FX module container with DI providers
-- `app/build_specs.go` — Build metadata (version, channel, build date)
+- `app/specs.go` — Build metadata (version, channel, build date)
 - `app/bootstrap/` — Bootstrap providers:
   - `init.go` — Initialization function, validates env, creates working dirs, initializes loggers
-  - `module/loggers.go` — Logger providers (AuditLogger, ErrorLogger)
-  - `module/iris.go` — Iris web framework provider (uses Django template engine, enables hot-reload in dev)
-- `app/config/env.go` — Env struct with `Load()` and `Validate()` methods
-- `templates/` — Embedded template files (banner.template)
-- `static/` — Embedded static files
+  - `loggers.go` — Logger providers (AuditLogger, ErrorLogger)
+- `app/service/env/env.go` — Env struct with `Load()` and `Validate()` methods
+- `res/` — Embedded application resources files
 - `.env.dist` — Environment template file (must be copied to .env and customized)
-
----
-
-## Template Engine
-
-Iris uses the Django template engine (`.html.django` extension). Static files are served from the embedded filesystem at `/static`.
 
 ---
 
@@ -30,16 +22,13 @@ Copy `.env.dist` to `.env` and configure:
 |-----------|------------|----------------------------------|
 | `ENV`     | `dev`      | Environment (`dev` or `prod`)    |
 | `VAR_DIR` | `var`      | Base directory for runtime files |
-| `HOST`    | `127.0.0.1`| Server bind address              |
-| `PORT`    | `3096`     | Server port                      |
 
-The `Validate()` method enforces `ENV` as `dev` or `prod`, and port range `1-65535`.
+The `Validate()` method enforces `ENV` as `dev` or `prod` and other validations.
 
 ---
 
 ## Tech Stack
 
-- **Iris v12** — Web framework
 - **Cobra** — Root command framework (integrated via `went-command`)
 - **Uber FX** — Dependency injection container
 - **went-clio** — CLI output formatting (console input/output)
@@ -57,14 +46,14 @@ The `Validate()` method enforces `ENV` as `dev` or `prod`, and port range `1-655
 Commands implement `command.Interface` and use `GetHeader()` to define cobra metadata:
 
 ```go
-var _ command.Interface = (*ServeCmd)(nil)
-type ServeCmd struct {
+var _ command.Interface = (*Serve)(nil)
+type Serve struct {
     command.Base
 }
 
-func NewServeCmd() command.Interface { ... }
+func NewServe() command.Interface { ... }
 
-func (c *ServeCmd) GetHeader() command.Header {
+func (c *Serve) GetHeader() command.Header {
     return command.Header{
         Use:   "serve",
         Short: "Run the web server",
@@ -72,11 +61,11 @@ func (c *ServeCmd) GetHeader() command.Header {
     }
 }
 
-func (c *ServeCmd) Invoke() any {
+func (c *Serve) Invoke() any {
     return c.run
 }
 
-func (c *ServeCmd) run(...) error { ... }
+func (c *Serve) run(...) error { ... }
 ```
 
 ### Kernel Pattern
@@ -95,16 +84,15 @@ Providers in `container.go` wrap types into FX-injectable named types:
 ```go
 var Container = fx.Module(
     "container",
-    fx.Provide(module.IrisProvider),
-    fx.Provide(module.AuditLoggerProvider),
-    fx.Provide(module.ErrorLoggerProvider),
-    fx.Provide(config.LoadEnv),
+    bootstrap.Init,
+    bootstrap.Loggers,
+    fx.Provide(env.Load),
 )
 ```
 
 ### Env Config
 
-`config/env.go` defines a single typed struct with `Load()` (reads from environment) and `Validate()` methods. It uses `godotenv` to load `.env` file. No raw `os.Getenv` calls outside this file.
+`app/service/env/env.go` defines a single typed struct with `Load()` (reads from environment) and `Validate()` methods. It uses `godotenv` to load `.env` file. No raw `os.Getenv` calls outside this file.
 
 ### Runtime Directories
 
