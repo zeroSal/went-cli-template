@@ -1,8 +1,7 @@
 package bootstrap
 
 import (
-	"clitemplate/app/bootstrap/module"
-	"clitemplate/app/config"
+	"clitemplate/app/service/env"
 	"fmt"
 	"os"
 
@@ -12,10 +11,9 @@ import (
 var Init = fx.Options(
 	fx.Invoke(InitWorkingDirs),
 	fx.Invoke(ValidateEnv),
-	fx.Invoke(InitLoggers),
 )
 
-func InitWorkingDirs(env *config.Env) error {
+func InitWorkingDirs(env *env.Env) error {
 	dirs := []string{
 		env.GetLogsDir(),
 	}
@@ -29,19 +27,6 @@ func InitWorkingDirs(env *config.Env) error {
 	return nil
 }
 
-func ValidateEnv(env *config.Env) error {
+func ValidateEnv(env *env.Env) error {
 	return env.Validate()
-}
-
-func InitLoggers(
-	auditLogger *module.AuditLogger,
-	errorLogger *module.ErrorLogger,
-) error {
-	if err := auditLogger.Init(); err != nil {
-		return err
-	}
-	if err := errorLogger.Init(); err != nil {
-		return err
-	}
-	return nil
 }

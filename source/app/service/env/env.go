@@ -1,4 +1,4 @@
-package config
+package env
 
 import (
 	"errors"
@@ -13,7 +13,7 @@ type Env struct {
 	VarDir string
 }
 
-func LoadEnv() *Env {
+func Load() *Env {
 	_ = godotenv.Load()
 
 	env := &Env{

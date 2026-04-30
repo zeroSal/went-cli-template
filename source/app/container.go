@@ -1,15 +1,15 @@
 package app
 
 import (
-	"clitemplate/app/bootstrap/module"
-	"clitemplate/app/config"
+	"clitemplate/app/bootstrap"
+	"clitemplate/app/service/env"
 
 	"go.uber.org/fx"
 )
 
 var Container = fx.Module(
 	"container",
-	fx.Provide(module.AuditLoggerProvider),
-	fx.Provide(module.ErrorLoggerProvider),
-	fx.Provide(config.LoadEnv),
+	bootstrap.Init,
+	bootstrap.Loggers,
+	fx.Provide(env.Load),
 )

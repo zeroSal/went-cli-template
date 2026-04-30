@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"clitemplate/app"
-	"clitemplate/app/config"
+	"clitemplate/app/service/env"
 	"clitemplate/registry"
 	"context"
 
@@ -33,7 +33,7 @@ func (c *ExampleCmd) Invoke() any {
 
 func (c *ExampleCmd) run(
 	ctx context.Context,
-	env *config.Env,
+	env *env.Env,
 	clio *clio.Clio,
 	specs *app.Specs,
 ) error {

@@ -1,7 +1,6 @@
 package app
 
 import (
-	"clitemplate/app/bootstrap"
 	"context"
 	"embed"
 
@@ -37,7 +36,6 @@ func (a *Kernel) Run(invoke any, opts ...fx.Option) error {
 
 	di := []fx.Option{
 		Container,
-		bootstrap.Init,
 		fx.Supply(a.Clio),
 		fx.Supply(a.EmbedFS),
 		fx.Supply(a.Specs),

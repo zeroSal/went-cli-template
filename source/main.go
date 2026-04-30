@@ -2,7 +2,7 @@ package main
 
 import (
 	"clitemplate/app"
-	_ "clitemplate/cmd"
+	_ "clitemplate/app/cmd"
 	"clitemplate/registry"
 	"context"
 	"embed"
